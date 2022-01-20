@@ -1,9 +1,9 @@
 <project name="TrabalhoPROG3_2021_2" default="compile" basedir=".">
 <description>Arquivo de build do trabalho de PROG3, 2020/2.</description>
 <!-- Propriedades do build. -->
-<property name="src" location="src\main\java\com\ufes" />
-<property name="bin" location="target\classes\" />
-<property name="mainClass" value="com.ufes" />
+<property name="src" location="src" />
+<property name="bin" location="bin" />
+<property name="mainClass" value="App" />
 <!-- Inicialização. -->
 <target name="init" description="Inicializa as estruturas necessárias.">
 <tstamp/>
@@ -37,6 +37,6 @@ normal.">
 <!-- Limpeza. -->
 <target name="clean" description="Limpa o projeto, deixando apenas o código-fonte." >
 <delete dir="${bin}"/>
-<delete><fileset dir="." includes="*.csv"/></delete>
+<!-- <delete><fileset dir="." includes="*.csv"/></delete> -->
 </target>
 </project>
