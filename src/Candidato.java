@@ -1,32 +1,32 @@
 public class Candidato {
 
-    private String numero;
-    private String votos_nominais;
+    private int numero;
+    private int votos_nominais;
     private String situacao;
     private String nome;
     private String nome_urna;
     private String sexo;
     private String data_nasc;
     private String destino_voto;
-    private String numero_partido;
+    private int numero_partido;
 
     public Candidato() {
 
     }
 
-    public String getNumero() {
+    public int getNumero() {
         return numero;
     }
 
-    public void setNumero(String numero) {
+    public void setNumero(int numero) {
         this.numero = numero;
     }
 
-    public String getVotos_nominais() {
+    public int getVotos_nominais() {
         return votos_nominais;
     }
 
-    public void setVotos_nominais(String votos_nominais) {
+    public void setVotos_nominais(int votos_nominais) {
         this.votos_nominais = votos_nominais;
     }
 
@@ -78,11 +78,11 @@ public class Candidato {
         this.destino_voto = destino_voto;
     }
 
-    public String getNumero_partido() {
+    public int getNumero_partido() {
         return numero_partido;
     }
 
-    public void setNumero_partido(String numero_partido) {
+    public void setNumero_partido(int numero_partido) {
         this.numero_partido = numero_partido;
     }
 

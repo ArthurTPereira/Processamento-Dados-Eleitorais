@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -22,15 +21,15 @@ public class App {
 
             while (linha.hasMoreTokens()) {
                 Candidato p = new Candidato();
-                p.setNumero(linha.nextToken(","));
-                p.setVotos_nominais(linha.nextToken(","));
+                p.setNumero(Integer.parseInt(linha.nextToken(",")));
+                p.setVotos_nominais(Integer.parseInt(linha.nextToken(",")));
                 p.setSituacao(linha.nextToken(","));
                 p.setNome(linha.nextToken(","));
                 p.setNome_urna(linha.nextToken(","));
                 p.setSexo(linha.nextToken(","));
                 p.setData_nasc(linha.nextToken(","));
                 p.setDestino_voto(linha.nextToken(","));
-                p.setNumero_partido(linha.nextToken(","));
+                p.setNumero_partido(Integer.parseInt(linha.nextToken(",\r")));
                 candidatos.add(p);
             }
         }
