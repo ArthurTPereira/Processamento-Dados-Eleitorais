@@ -1,3 +1,5 @@
+import java.util.StringTokenizer;
+
 public class Candidato {
 
     private int numero;
@@ -84,6 +86,22 @@ public class Candidato {
 
     public void setNumero_partido(int numero_partido) {
         this.numero_partido = numero_partido;
+    }
+
+    public void registraCandidato(StringTokenizer linha) {
+        this.setNumero(Integer.parseInt(linha.nextToken(",")));
+        this.setVotos_nominais(Integer.parseInt(linha.nextToken(",")));
+        this.setSituacao(linha.nextToken(","));
+        this.setNome(linha.nextToken(","));
+        this.setNome_urna(linha.nextToken(","));
+        this.setSexo(linha.nextToken(","));
+        this.setData_nasc(linha.nextToken(","));
+        this.setDestino_voto(linha.nextToken(","));
+        this.setNumero_partido(Integer.parseInt(linha.nextToken(",\r")));
+    }
+
+    public void imprimeCandidato() {
+        System.out.println(this.getNumero() + " " + this.getVotos_nominais() + " " + this.getSituacao() + " " + this.getNome() + " " + this.getNome_urna() + " " + this.getSexo() + " " + this.getData_nasc() + " " + this.getDestino_voto() + " " + this.getNumero_partido());
     }
 
 }

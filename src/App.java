@@ -21,15 +21,7 @@ public class App {
 
             while (linha.hasMoreTokens()) {
                 Candidato p = new Candidato();
-                p.setNumero(Integer.parseInt(linha.nextToken(",")));
-                p.setVotos_nominais(Integer.parseInt(linha.nextToken(",")));
-                p.setSituacao(linha.nextToken(","));
-                p.setNome(linha.nextToken(","));
-                p.setNome_urna(linha.nextToken(","));
-                p.setSexo(linha.nextToken(","));
-                p.setData_nasc(linha.nextToken(","));
-                p.setDestino_voto(linha.nextToken(","));
-                p.setNumero_partido(Integer.parseInt(linha.nextToken(",\r")));
+                p.registraCandidato(linha);
                 candidatos.add(p);
             }
         }
@@ -37,15 +29,7 @@ public class App {
         CandidatosCSV.close();
 
         for(Candidato p : candidatos) {
-            System.out.println(p.getNumero());
-            System.out.println(p.getVotos_nominais());
-            System.out.println(p.getSituacao());
-            System.out.println(p.getNome());
-            System.out.println(p.getNome_urna());
-            System.out.println(p.getSexo());
-            System.out.println(p.getData_nasc());
-            System.out.println(p.getDestino_voto());
-            System.out.println(p.getNumero_partido());
+            p.imprimeCandidato();
         }
 
 
