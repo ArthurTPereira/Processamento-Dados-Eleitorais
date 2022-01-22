@@ -11,6 +11,15 @@ public class Candidato {
     private String data_nasc;
     private String destino_voto;
     private int numero_partido;
+    private Partido partido;
+
+    public Partido getPartido() {
+        return partido;
+    }
+
+    public void setPartido(Partido partido) {
+        this.partido = partido;
+    }
 
     public Candidato() {
 

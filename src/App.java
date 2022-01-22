@@ -1,8 +1,9 @@
+import org.w3c.dom.ls.LSOutput;
+
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.io.FileWriter;
+import java.sql.SQLOutput;
+import java.util.*;
 
 public class App {
     public static void main( String[] args ) throws Exception {
@@ -60,5 +61,42 @@ public class App {
 
         //Fecha o método utilizado para ler o arquivo CSV de partidos
         partidosCSV.close();
+
+        //Define um vetor de candidatos eleitos
+        ArrayList<Candidato> candidatos_eleitos = new ArrayList<>();
+
+        int eleitos = 0;
+
+        for (Candidato c : candidatos) {
+
+            //Verifica a quantidade de candidatos eleitos
+            if (Objects.equals(c.getSituacao(), "Eleito") && Objects.equals(c.getDestino_voto(), "Válido")) {
+                eleitos++;
+                candidatos_eleitos.add(c);
+            }
+
+            //Associa cada candidato ao seu partido
+            for (Partido p : partidos) {
+                if (c.getNumero_partido() == p.getNumero_partido()) {
+                    c.setPartido(p);
+                }
+            }
+        }
+
+        //Organiza os candidatos eleitos na ordem decrescente de votos
+        candidatos_eleitos.sort(Comparator.comparingInt(Candidato::getVotos_nominais).reversed());
+
+        //Imprime a quantidade de candidatos eleitos
+        System.out.println("Número de vagas: " + eleitos + "\n");
+
+
+        //Imprime os vereadores eleitos, na ordem decrescente de votos
+        int pos = 1;
+        System.out.println("Vereadores eleitos:");
+        for (Candidato c : candidatos_eleitos) {
+            System.out.println(pos + " - " + c.getNome() + " / " + c.getNome_urna() + " (" + c.getPartido().getSigla_partido() + ", " + c.getVotos_nominais() + " votos)");
+            pos++;
+        }
     }
 }
+
