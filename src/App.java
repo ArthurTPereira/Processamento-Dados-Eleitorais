@@ -13,15 +13,14 @@ public class App {
         CandidatosCSV.useDelimiter("\n");
         CandidatosCSV.next();
 
-        StringTokenizer linha;
-        int n = 0;
+        StringTokenizer linhaCandidatos;
 
         while (CandidatosCSV.hasNext()) {
-            linha = new StringTokenizer(CandidatosCSV.next());
+            linhaCandidatos = new StringTokenizer(CandidatosCSV.next());
 
-            while (linha.hasMoreTokens()) {
+            while (linhaCandidatos.hasMoreTokens()) {
                 Candidato p = new Candidato();
-                p.registraCandidato(linha);
+                p.registraCandidato(linhaCandidatos);
                 candidatos.add(p);
             }
         }
@@ -42,5 +41,26 @@ public class App {
 
         System.out.println("Número de vagas:" + eleitos);
 
+        ArrayList<Partido> partidos = new ArrayList<>();
+
+        Scanner partidosCSV = new Scanner(new File(args[1]));
+        partidosCSV.useDelimiter("\n");
+        partidosCSV.next();
+
+        StringTokenizer linhaPartidos;
+
+        while (partidosCSV.hasNext()) {
+            linhaPartidos = new StringTokenizer(partidosCSV.next());
+
+            while (linhaPartidos.hasMoreTokens()) {
+                Partido p = new Partido();
+                p.registraPartido(linhaPartidos);
+                partidos.add(p);
+            }
+        }
+
+        for (Partido p : partidos) {
+            p.imprimePartido();
+        }
     }
 }
