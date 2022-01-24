@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.*;
+
 public class App {
     public static void main( String[] args ) throws Exception {
 
@@ -60,15 +61,15 @@ public class App {
         //Organiza os candidatos na ordem decrescente de votos, priorizando o mais velho
         candidatos.sort(new Comparator<Candidato>() {
             @Override
-            public int compare(Candidato o1, Candidato o2) {
+            public int compare(Candidato c1, Candidato c2) {
 
                 //Compara os votos nominais
-                if (o1.getVotos_nominais() != o2.getVotos_nominais()) {
-                    return o2.getVotos_nominais() - o1.getVotos_nominais();
+                if (c1.getVotos_nominais() != c2.getVotos_nominais()) {
+                    return c2.getVotos_nominais() - c1.getVotos_nominais();
                 }
 
                 //Caso os votos sejam iguais, ordena por data de nascimento
-                return o1.getData_nasc().compareTo(o2.getData_nasc());
+                return c1.getData_nasc().compareTo(c2.getData_nasc());
             }
         });
 
@@ -89,6 +90,14 @@ public class App {
             for (Partido p : partidos) {
                 if (c.getNumero_partido() == p.getNumero_partido()) {
                     c.setPartido(p);
+
+                    //Incrementa os votos do candidato atual ao número de votos do seu partido
+                    p.incrementaVotos(c.getVotos_nominais());
+
+                    //Se o candidato atual for eleito, incrementa o número de candidatos eleitos do partido
+                    if (Objects.equals(c.getSituacao(), "Eleito") && Objects.equals(c.getDestino_voto(), "Válido")) {
+                        p.incrementaCandidatosEleitos();
+                    }
                 }
             }
         }
@@ -101,7 +110,7 @@ public class App {
         //Imprime os vereadores eleitos, na ordem decrescente de votos (2)
         System.out.println("Vereadores eleitos:");
         for (Candidato c : candidatos_eleitos) {
-            System.out.println(pos + " - " + c.getNome() + " / " + c.getNome_urna() + " (" + c.getPartido().getSigla_partido() + ", " + c.getVotos_nominais() + " votos)");
+            System.out.println(pos + "" + c);
             pos++;
         }
 
@@ -110,7 +119,7 @@ public class App {
         //Imprime os candidatos mais votados dentro do número de vagas (3)
         System.out.println("\nCandidatos mais votados (em ordem decrescente de votação e respeitando número de vagas):");
         for (int i = 0; i < vagas; i++) {
-            System.out.println(pos + " - " + candidatos.get(i).getNome() + " / " + candidatos.get(i).getNome_urna() + " (" + candidatos.get(i).getPartido().getSigla_partido() + ", " + candidatos.get(i).getVotos_nominais() + " votos)");
+            System.out.println(pos + "" + candidatos.get(i));
             pos++;
         }
 
@@ -120,7 +129,7 @@ public class App {
         for (int i = 0; i < vagas; i++) {
 
             if (!Objects.equals(candidatos.get(i).getSituacao(), "Eleito"))
-            System.out.println((i+1) + " - " + candidatos.get(i).getNome() + " / " + candidatos.get(i).getNome_urna() + " (" + candidatos.get(i).getPartido().getSigla_partido() + ", " + candidatos.get(i).getVotos_nominais() + " votos)");
+            System.out.println((i+1) + "" + candidatos.get(i));
         }
 
         //Imprime os candidatos que foram beneficiados pelo sistema proporcional (5)
@@ -128,9 +137,31 @@ public class App {
         System.out.println("(com sua posição no ranking de mais votados)");
         for (int i = vagas; i < candidatos.size(); i++) {
             if (Objects.equals(candidatos.get(i).getSituacao(), "Eleito")) {
-                System.out.println((i+1) + " - " + candidatos.get(i).getNome() + " / " + candidatos.get(i).getNome_urna() + " (" + candidatos.get(i).getPartido().getSigla_partido() + ", " + candidatos.get(i).getVotos_nominais() + " votos)");
+                System.out.println((i+1) + "" + candidatos.get(i));
             }
+        }
+
+        //Ordena o vetor de partidos em ordem decrescente de votos totais, priorizando o partido com menor número
+        partidos.sort(new Comparator<Partido>() {
+            @Override
+            public int compare(Partido p1, Partido p2) {
+
+                //Compara os votos totais
+                if (p1.getVotos_totais() != p2.getVotos_totais()) {
+                    return p2.getVotos_totais() - p1.getVotos_totais();
+                }
+
+                //Se os votos totais forem iguais, ordena pelo menor número do partido
+                return p1.getNumero_partido() - p2.getNumero_partido();
+            }
+        });
+
+        //Imprime os votos totalizados por partido e o número de candidatos eleitos (6)
+        System.out.println("\nVotação dos partidos e número de candidatos eleitos:");
+        pos = 1;
+        for (Partido p : partidos) {
+            System.out.println(pos + "" + p);
+            pos++;
         }
     }
 }
-

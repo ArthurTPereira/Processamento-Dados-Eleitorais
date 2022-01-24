@@ -109,8 +109,9 @@ public class Candidato {
         this.setNumero_partido(Integer.parseInt(linha.nextToken(",\r")));
     }
 
-    public void imprimeCandidato() {
-        System.out.println(this.getNumero() + " " + this.getVotos_nominais() + " " + this.getSituacao() + " " + this.getNome() + " " + this.getNome_urna() + " " + this.getSexo() + " " + this.getData_nasc() + " " + this.getDestino_voto() + " " + this.getNumero_partido());
+    @Override
+    public String toString() {
+        return (" - " + this.getNome() + " / " + this.getNome_urna() + " (" + this.getPartido().getSigla_partido() + ", " + this.getVotos_nominais() + " votos)");
     }
 
 }
