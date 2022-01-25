@@ -1,4 +1,6 @@
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class App {
@@ -69,7 +71,19 @@ public class App {
                 }
 
                 //Caso os votos sejam iguais, ordena por data de nascimento
-                return c1.getData_nasc().compareTo(c2.getData_nasc());
+                //Implementação de uma forma de comparação de datas
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                try {
+                    Date d1 = sdf.parse(c1.getData_nasc());
+                    Date d2 = sdf.parse(c2.getData_nasc());
+
+                    return d1.compareTo(d2);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                //Caso passe por todas as comparações anteriores, não ordena nada
+                return 0;
             }
         });
 
@@ -92,7 +106,10 @@ public class App {
                     c.setPartido(p);
 
                     //Incrementa os votos do candidato atual ao número de votos do seu partido
-                    p.incrementaVotos(c.getVotos_nominais());
+                    if (Objects.equals(c.getDestino_voto(), "Válido")) {
+                        p.getCandidatos().add(c);
+                        p.incrementaVotos(c.getVotos_nominais());
+                    }
 
                     //Se o candidato atual for eleito, incrementa o número de candidatos eleitos do partido
                     if (Objects.equals(c.getSituacao(), "Eleito") && Objects.equals(c.getDestino_voto(), "Válido")) {
@@ -160,8 +177,160 @@ public class App {
         System.out.println("\nVotação dos partidos e número de candidatos eleitos:");
         pos = 1;
         for (Partido p : partidos) {
-            System.out.println(pos + "" + p);
+            if (p.getVotos_nominais() > 1) {
+                System.out.println(pos + "" + p);
+            }
+            else {
+                System.out.println(pos + (" - " + p.getSigla_partido() + " - " +
+                        p.getNumero_partido() + ", " + p.getVotos_totais() +
+                        " voto (" + p.getVotos_nominais() + " nominal e " + p.getVotos_legenda()
+                        + " de legenda), " + p.getCandidatos_eleitos() + " candidato eleito")
+                );
+            }
             pos++;
+        }
+
+        //Ordena os partidos na ordem decrescente de votos de legenda, priorizando a ordem de votos nominais e em seguina, número do partido
+        partidos.sort(new Comparator<Partido>() {
+            @Override
+            public int compare(Partido p1, Partido p2) {
+
+                //Compara os votos de legenda
+                if (p1.getVotos_legenda() != p2.getVotos_legenda()) {
+                    return p2.getVotos_legenda() - p1.getVotos_legenda();
+                }
+
+                //Compara os votos nominais
+                else if (p1.getVotos_nominais() != p2.getVotos_nominais()) {
+                    return p2.getVotos_nominais() - p1.getVotos_nominais();
+                }
+
+                //Se os votos acima forem iguais, ordena pelo menor número do partido
+                return p1.getNumero_partido() - p2.getNumero_partido();
+            }
+        });
+
+        //Imprime os votos de legenda com a porcentagem em relação aos votos totais (7)
+        System.out.println("\nVotação dos partidos (apenas votos de legenda):");
+        pos = 1;
+        for (Partido p : partidos) {
+            if (p.getVotos_totais() != 0) {
+                if (p.getVotos_totais() > 1) {
+                    System.out.println(pos + " - " + p.getSigla_partido() + " - " +
+                            p.getNumero_partido() + ", " + p.getVotos_legenda() +
+                            " votos de legenda (" + String.format(Locale.FRANCE,
+                            "%,.2f", 100.0 * p.getVotos_legenda() / p.getVotos_totais())
+                            + "% do total do partido)"
+                    );
+                }
+                else {
+                    System.out.println(pos + " - " + p.getSigla_partido() + " - " +
+                            p.getNumero_partido() + ", " + p.getVotos_legenda() +
+                            " voto de legenda (" + String.format(Locale.FRANCE,
+                            "%,.2f", 100.0 * p.getVotos_legenda() / p.getVotos_totais())
+                            + "% do total do partido)"
+                    );
+
+                }
+            }
+
+            //Caso os votos totais sejam zero
+            else {
+                System.out.println(pos + " - " + p.getSigla_partido() + " - " +
+                        p.getNumero_partido() + ", " + p.getVotos_legenda() +
+                        " voto de legenda (proporção não calculada, 0 voto no partido)"
+                );
+            }
+            pos++;
+        }
+
+        //Ordena os candidatos dos partidos na ordem decrescente de votos nominais, priorizando a idade do mais velho.
+        for (Partido p : partidos) {
+            //Verifica se a lista de candidatos está vazia
+            if (!p.getCandidatos().isEmpty()) {
+
+                //Faz a ordenação
+                p.getCandidatos().sort(new Comparator<Candidato>() {
+                    @Override
+                    public int compare(Candidato c1, Candidato c2) {
+
+                        //Compara os votos nominais dos candidatos
+                        if (c1.getVotos_nominais() != c2.getVotos_nominais()) {
+                            return c2.getVotos_nominais() - c1.getVotos_nominais();
+                        }
+
+                        //Caso os votos nominais sejam iguais, compara a idade
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                        try {
+                            Date d1 = sdf.parse(c1.getData_nasc());
+                            Date d2 = sdf.parse(c2.getData_nasc());
+
+                            return d1.compareTo(d2);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Caso passe por todas as comparações anteriores, não altera a ordem
+                        return 0;
+                    }
+                })
+            ;};
+        }
+
+        //Ordena os partidos por ordem decrescente de votos nominais do candidato mais votado de cada partido,
+        // priorizando o número do partido
+        partidos.sort(new Comparator<Partido>() {
+            @Override
+            public int compare(Partido p1, Partido p2) {
+
+                //Verifica se a lista de candidatos está vazia
+                if (p1.getCandidatos().isEmpty() || p2.getCandidatos().isEmpty()) {
+                    return 0;
+                }
+
+                //Compara os votos nominais dos candidatos mais votados do partido
+                else if (p1.getCandidatos().get(0).getVotos_nominais() != p2.getCandidatos().get(0).getVotos_nominais()) {
+                    return p2.getCandidatos().get(0).getVotos_nominais() - p1.getCandidatos().get(0).getVotos_nominais();
+                }
+
+                //Caso os votos nominais sejam iguais, compara o número do partido
+                return p1.getNumero_partido() - p2.getNumero_partido();
+            }
+        });
+
+        //Imprime os primeiros e último colocados de cada partido
+        System.out.println("Primeiro e último colocados de cada partido:");
+        pos = 1;
+        for (Partido p : partidos) {
+
+            //Verifica se a lista de candidatos está vazia
+            if (!p.getCandidatos().isEmpty()) {
+                 if (p.getCandidatos().get(p.getCandidatos().size()-1).getVotos_nominais() > 1) {
+
+                    //Imprime no formato especificado
+                    System.out.println(pos + " - " + p.getSigla_partido() + " - " +
+                            p.getNumero_partido() + ", " + p.getCandidatos().get(0).getNome_urna()
+                            + " (" + p.getCandidatos().get(0).getNumero() + ", " +
+                            p.getCandidatos().get(0).getVotos_nominais() + " votos) / "
+                            + p.getCandidatos().get(p.getCandidatos().size() - 1).getNome_urna() +
+                            " (" + p.getCandidatos().get(p.getCandidatos().size() - 1).getNumero() + ", "
+                            + p.getCandidatos().get(p.getCandidatos().size() - 1).getVotos_nominais() + " votos)"
+                    );
+                }
+                else {
+
+                    //Imprime no formato especificado
+                    System.out.println(pos + " - " + p.getSigla_partido() + " - " +
+                            p.getNumero_partido() + ", " + p.getCandidatos().get(0).getNome_urna() +
+                            " (" + p.getCandidatos().get(0).getNumero() + ", " +
+                            p.getCandidatos().get(0).getVotos_nominais() + " votos) / " +
+                            p.getCandidatos().get(p.getCandidatos().size() - 1).getNome_urna() +
+                            " (" + p.getCandidatos().get(p.getCandidatos().size() - 1).getNumero() + ", "
+                            + p.getCandidatos().get(p.getCandidatos().size() - 1).getVotos_nominais() + " voto)"
+                    );
+                }
+                pos++;
+            }
         }
     }
 }

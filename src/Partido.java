@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Partido {
@@ -9,6 +10,7 @@ public class Partido {
     private int votos_totais;
     private int votos_nominais;
     private int candidatos_eleitos;
+    private ArrayList<Candidato> candidatos = new ArrayList<>();
 
     public Partido() {
 
@@ -68,6 +70,14 @@ public class Partido {
 
     public void setCandidatos_eleitos(int candidatos_eleitos) {
         this.candidatos_eleitos = candidatos_eleitos;
+    }
+
+    public ArrayList<Candidato> getCandidatos() {
+        return candidatos;
+    }
+
+    public void setCandidatos(ArrayList<Candidato> candidatos) {
+        this.candidatos = candidatos;
     }
 
     public void registraPartido(StringTokenizer linha) {
