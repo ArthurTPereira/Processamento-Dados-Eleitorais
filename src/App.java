@@ -305,11 +305,7 @@ public class App {
         LocalDate data_eleicao = LocalDate.parse(args[2], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         //Variaveis para imprimir os itens 9 e 10
-        int menorque30 =0;
-        int de30a40 = 0;
-        int de40a50 = 0;
-        int de50a60 = 0;
-        int maioque60 = 0;
+        int[] intervalos = {0,0,0,0,0}; // Cada posição indica um dos intervalos determinados, em ordem
         int masculinos = 0;
         int femininos = 0;
         LocalDate data_nascimento;
@@ -322,19 +318,19 @@ public class App {
 
             //Verifica se é menor que 30
             if (Period.between(data_nascimento,data_eleicao).getYears() < 30) {
-                menorque30++;
+                intervalos[0]++;
             } //Verifica se está entre 30 e 40
             else if (Period.between(data_nascimento,data_eleicao).getYears() >= 30 && Period.between(data_nascimento,data_eleicao).getYears() < 40) {
-                de30a40++;
+                intervalos[1]++;
             } //Verifica se está entre 40 e 50
             else if (Period.between(data_nascimento,data_eleicao).getYears() >=40 && Period.between(data_nascimento,data_eleicao).getYears() < 50 ) {
-                de40a50++;
+                intervalos[2]++;
             } //Verifica se está entre 50 e 60
             else if (Period.between(data_nascimento,data_eleicao).getYears() >= 50 && Period.between(data_nascimento,data_eleicao).getYears() < 60) {
-                de50a60++;
+                intervalos[3]++;
             } //Se não entrar em nenhum if, possui mais que 60
             else {
-                maioque60++;
+                intervalos[4]++;
             }
 
             //Verifica se é masculino ou feminino
@@ -347,11 +343,11 @@ public class App {
 
         //Imprime a distribuição de eleitos por faixa etária, considerando a idade do candidato no dia da eleição (9)
         System.out.println("Eleitos, por faixa etária (na data da eleição):");
-        System.out.printf(Locale.FRANCE,"      Idade < 30: %d (%,.2f%%)\n",menorque30,100.0 * menorque30 / vagas);
-        System.out.printf(Locale.FRANCE,"30 <= Idade < 40: %d (%,.2f%%)\n",de30a40,100.0 * de30a40 / vagas);
-        System.out.printf(Locale.FRANCE,"40 <= Idade < 50: %d (%,.2f%%)\n",de40a50,100.0 * de40a50 / vagas);
-        System.out.printf(Locale.FRANCE,"50 <= Idade < 60: %d (%,.2f%%)\n",de50a60,100.0 * de50a60 / vagas);
-        System.out.printf(Locale.FRANCE,"60 <= Idade     : %d (%,.2f%%)\n",maioque60,100.0 * maioque60 / vagas);
+        System.out.printf(Locale.FRANCE,"      Idade < 30: %d (%,.2f%%)\n",intervalos[0],100.0 * intervalos[0] / vagas);
+        System.out.printf(Locale.FRANCE,"30 <= Idade < 40: %d (%,.2f%%)\n",intervalos[1],100.0 * intervalos[1] / vagas);
+        System.out.printf(Locale.FRANCE,"40 <= Idade < 50: %d (%,.2f%%)\n",intervalos[2],100.0 * intervalos[2] / vagas);
+        System.out.printf(Locale.FRANCE,"50 <= Idade < 60: %d (%,.2f%%)\n",intervalos[3],100.0 * intervalos[3] / vagas);
+        System.out.printf(Locale.FRANCE,"60 <= Idade     : %d (%,.2f%%)\n",intervalos[4],100.0 * intervalos[4] / vagas);
 
 
         //Imprime a distribuição de eleitos por sexo (10)
