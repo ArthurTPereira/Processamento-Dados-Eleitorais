@@ -1,6 +1,7 @@
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class App {
@@ -71,19 +72,9 @@ public class App {
                 }
 
                 //Caso os votos sejam iguais, ordena por data de nascimento
-                //Implementação de uma forma de comparação de datas
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                try {
-                    Date d1 = sdf.parse(c1.getData_nasc());
-                    Date d2 = sdf.parse(c2.getData_nasc());
-
-                    return d1.compareTo(d2);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                //Caso passe por todas as comparações anteriores, não ordena nada
-                return 0;
+                LocalDate d1 = LocalDate.parse(c1.getData_nasc(),DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                LocalDate d2 = LocalDate.parse(c2.getData_nasc(),DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                return d1.compareTo(d2);
             }
         });
 
@@ -181,11 +172,9 @@ public class App {
                 System.out.println(pos + "" + p);
             }
             else {
-                System.out.println(pos + (" - " + p.getSigla_partido() + " - " +
-                        p.getNumero_partido() + ", " + p.getVotos_totais() +
-                        " voto (" + p.getVotos_nominais() + " nominal e " + p.getVotos_legenda()
-                        + " de legenda), " + p.getCandidatos_eleitos() + " candidato eleito")
-                );
+                System.out.printf("%d - %s - %d, %d voto (%d nominal e %d de legenda), %d candidato eleito\n",
+                        pos,p.getSigla_partido(),p.getNumero_partido(),p.getVotos_totais(),p.getVotos_nominais(),
+                        p.getVotos_legenda(),p.getCandidatos_eleitos());
             }
             pos++;
         }
@@ -216,30 +205,21 @@ public class App {
         for (Partido p : partidos) {
             if (p.getVotos_totais() != 0) {
                 if (p.getVotos_totais() > 1) {
-                    System.out.println(pos + " - " + p.getSigla_partido() + " - " +
-                            p.getNumero_partido() + ", " + p.getVotos_legenda() +
-                            " votos de legenda (" + String.format(Locale.FRANCE,
-                            "%,.2f", 100.0 * p.getVotos_legenda() / p.getVotos_totais())
-                            + "% do total do partido)"
-                    );
+                    System.out.printf(Locale.FRANCE,"%d - %s - %d, %d votos de legenda (%,.2f%% do total do partido)\n",
+                            pos,p.getSigla_partido(),p.getNumero_partido(),p.getVotos_legenda(),
+                            100.0 * p.getVotos_legenda() / p.getVotos_totais());
                 }
                 else {
-                    System.out.println(pos + " - " + p.getSigla_partido() + " - " +
-                            p.getNumero_partido() + ", " + p.getVotos_legenda() +
-                            " voto de legenda (" + String.format(Locale.FRANCE,
-                            "%,.2f", 100.0 * p.getVotos_legenda() / p.getVotos_totais())
-                            + "% do total do partido)"
-                    );
-
+                    System.out.printf(Locale.FRANCE,"%d - %s - %d, %d voto de legenda (%,.2f%% do total do partido)\n",
+                            pos,p.getSigla_partido(),p.getNumero_partido(),p.getVotos_legenda(),
+                            100.0 * p.getVotos_legenda() / p.getVotos_totais());
                 }
             }
 
             //Caso os votos totais sejam zero
             else {
-                System.out.println(pos + " - " + p.getSigla_partido() + " - " +
-                        p.getNumero_partido() + ", " + p.getVotos_legenda() +
-                        " voto de legenda (proporção não calculada, 0 voto no partido)"
-                );
+                System.out.printf("%d - %s - %d, %d voto de legenda (proporção não calculada, 0 voto no partido)\n",
+                        pos,p.getSigla_partido(),p.getNumero_partido(),p.getVotos_legenda());
             }
             pos++;
         }
@@ -260,21 +240,13 @@ public class App {
                         }
 
                         //Caso os votos nominais sejam iguais, compara a idade
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                        try {
-                            Date d1 = sdf.parse(c1.getData_nasc());
-                            Date d2 = sdf.parse(c2.getData_nasc());
+                        LocalDate d1 = LocalDate.parse(c1.getData_nasc(),DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        LocalDate d2 = LocalDate.parse(c2.getData_nasc(),DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-                            return d1.compareTo(d2);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                        //Caso passe por todas as comparações anteriores, não altera a ordem
-                        return 0;
+                        return d1.compareTo(d2);
                     }
                 })
-            ;};
+            ;}
         }
 
         //Ordena os partidos por ordem decrescente de votos nominais do candidato mais votado de cada partido,
@@ -298,7 +270,7 @@ public class App {
             }
         });
 
-        //Imprime os primeiros e último colocados de cada partido
+        //Imprime os primeiros e último colocados de cada partido (8)
         System.out.println("Primeiro e último colocados de cada partido:");
         pos = 1;
         for (Partido p : partidos) {
@@ -308,29 +280,100 @@ public class App {
                  if (p.getCandidatos().get(p.getCandidatos().size()-1).getVotos_nominais() > 1) {
 
                     //Imprime no formato especificado
-                    System.out.println(pos + " - " + p.getSigla_partido() + " - " +
-                            p.getNumero_partido() + ", " + p.getCandidatos().get(0).getNome_urna()
-                            + " (" + p.getCandidatos().get(0).getNumero() + ", " +
-                            p.getCandidatos().get(0).getVotos_nominais() + " votos) / "
-                            + p.getCandidatos().get(p.getCandidatos().size() - 1).getNome_urna() +
-                            " (" + p.getCandidatos().get(p.getCandidatos().size() - 1).getNumero() + ", "
-                            + p.getCandidatos().get(p.getCandidatos().size() - 1).getVotos_nominais() + " votos)"
-                    );
+                    System.out.printf("%d - %s - %d, %s (%d, %s votos) / %s (%d, %d votos)\n",
+                            pos,p.getSigla_partido(),p.getNumero_partido(), p.getCandidatos().get(0).getNome_urna(),
+                            p.getCandidatos().get(0).getNumero(), p.getCandidatos().get(0).getVotos_nominais(),
+                            p.getCandidatos().get(p.getCandidatos().size() - 1).getNome_urna(),
+                            p.getCandidatos().get(p.getCandidatos().size() - 1).getNumero(),
+                            p.getCandidatos().get(p.getCandidatos().size() - 1).getVotos_nominais());
                 }
                 else {
 
                     //Imprime no formato especificado
-                    System.out.println(pos + " - " + p.getSigla_partido() + " - " +
-                            p.getNumero_partido() + ", " + p.getCandidatos().get(0).getNome_urna() +
-                            " (" + p.getCandidatos().get(0).getNumero() + ", " +
-                            p.getCandidatos().get(0).getVotos_nominais() + " votos) / " +
-                            p.getCandidatos().get(p.getCandidatos().size() - 1).getNome_urna() +
-                            " (" + p.getCandidatos().get(p.getCandidatos().size() - 1).getNumero() + ", "
-                            + p.getCandidatos().get(p.getCandidatos().size() - 1).getVotos_nominais() + " voto)"
-                    );
+                     System.out.printf("%d - %s - %d, %s (%d, %s votos) / %s (%d, %d voto)\n",
+                             pos,p.getSigla_partido(),p.getNumero_partido(), p.getCandidatos().get(0).getNome_urna(),
+                             p.getCandidatos().get(0).getNumero(), p.getCandidatos().get(0).getVotos_nominais(),
+                             p.getCandidatos().get(p.getCandidatos().size() - 1).getNome_urna(),
+                             p.getCandidatos().get(p.getCandidatos().size() - 1).getNumero(),
+                             p.getCandidatos().get(p.getCandidatos().size() - 1).getVotos_nominais());
                 }
                 pos++;
             }
         }
+
+        //Configura a data da eleição
+        LocalDate data_eleicao = LocalDate.parse(args[2], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        //Variaveis para imprimir os itens 9 e 10
+        int menorque30 =0;
+        int de30a40 = 0;
+        int de40a50 = 0;
+        int de50a60 = 0;
+        int maioque60 = 0;
+        int masculinos = 0;
+        int femininos = 0;
+        LocalDate data_nascimento;
+
+        //Varre os candidatos eleitos e determina o intervalo de idade e o sexo
+        for (Candidato c : candidatos_eleitos) {
+
+            //Compara as datas
+            data_nascimento = LocalDate.parse(c.getData_nasc(),DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+            //Verifica se é menor que 30
+            if (Period.between(data_nascimento,data_eleicao).getYears() < 30) {
+                menorque30++;
+            } //Verifica se está entre 30 e 40
+            else if (Period.between(data_nascimento,data_eleicao).getYears() >= 30 && Period.between(data_nascimento,data_eleicao).getYears() < 40) {
+                de30a40++;
+            } //Verifica se está entre 40 e 50
+            else if (Period.between(data_nascimento,data_eleicao).getYears() >=40 && Period.between(data_nascimento,data_eleicao).getYears() < 50 ) {
+                de40a50++;
+            } //Verifica se está entre 50 e 60
+            else if (Period.between(data_nascimento,data_eleicao).getYears() >= 50 && Period.between(data_nascimento,data_eleicao).getYears() < 60) {
+                de50a60++;
+            } //Se não entrar em nenhum if, possui mais que 60
+            else {
+                maioque60++;
+            }
+
+            //Verifica se é masculino ou feminino
+            if (Objects.equals(c.getSexo(),"M")) {
+                masculinos++;
+            } else {
+                femininos++;
+            }
+        }
+
+        //Imprime a distribuição de eleitos por faixa etária, considerando a idade do candidato no dia da eleição (9)
+        System.out.println("Eleitos, por faixa etária (na data da eleição):");
+        System.out.printf(Locale.FRANCE,"      Idade < 30: %d (%,.2f%%)\n",menorque30,100.0 * menorque30 / vagas);
+        System.out.printf(Locale.FRANCE,"30 <= Idade < 40: %d (%,.2f%%)\n",de30a40,100.0 * de30a40 / vagas);
+        System.out.printf(Locale.FRANCE,"40 <= Idade < 50: %d (%,.2f%%)\n",de40a50,100.0 * de40a50 / vagas);
+        System.out.printf(Locale.FRANCE,"50 <= Idade < 60: %d (%,.2f%%)\n",de50a60,100.0 * de50a60 / vagas);
+        System.out.printf(Locale.FRANCE,"60 <= Idade     : %d (%,.2f%%)\n",maioque60,100.0 * maioque60 / vagas);
+
+
+        //Imprime a distribuição de eleitos por sexo (10)
+        System.out.println("Eleitos, por sexo:");
+        System.out.printf(Locale.FRANCE,"Feminino: %d (%,.2f%%)\n",femininos, 100.0 * femininos / vagas);
+        System.out.printf(Locale.FRANCE,"Masculino: %d (%,.2f%%)\n",masculinos, 100.0 * masculinos / vagas);
+
+
+        int votos_validos = 0;
+        int votos_nominais = 0;
+        int votos_legenda = 0;
+
+        //Calcula os votos totais, nominais e de legenda
+        for (Partido p : partidos) {
+            votos_validos += p.getVotos_totais();
+            votos_nominais += p.getVotos_nominais();
+            votos_legenda += p.getVotos_legenda();
+        }
+
+        //Imprime o total de votos, os nominais e os de legenda (11)
+        System.out.printf("Total de votos válidos:    %d\n",votos_validos);
+        System.out.printf(Locale.FRANCE,"Total de votos nominais:   %d (%,.2f%%)\n",votos_nominais, 100.0 * votos_nominais/votos_validos);
+        System.out.printf(Locale.FRANCE,"Total de votos de legenda: %d (%,.2f%%)\n",votos_legenda, 100.0 * votos_legenda/votos_validos);
     }
 }
