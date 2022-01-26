@@ -2,7 +2,5 @@
 target/classes/Partido.class
 target/classes/Candidato.class
 target/classes/App.class
-/testes/
-test.sh
 /.idea/
 /target/
