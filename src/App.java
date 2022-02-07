@@ -7,6 +7,12 @@ import java.util.*;
 public class App {
     public static void main( String[] args ) throws Exception {
 
+        //Verifica se os argumentos estão corretos
+        if (args[0].isEmpty() || args[1].isEmpty()) {
+            System.out.println("Erro: Argumentos insuficientes/incorretos.");
+            System.exit(1);
+        }
+
         //Define um vetor do tipo Candidato
         ArrayList<Candidato> candidatos = new ArrayList<>();
 
