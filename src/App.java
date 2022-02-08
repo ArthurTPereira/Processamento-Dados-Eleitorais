@@ -277,7 +277,7 @@ public class App {
         });
 
         //Imprime os primeiros e último colocados de cada partido (8)
-        System.out.println("Primeiro e último colocados de cada partido:");
+        System.out.println("\nPrimeiro e último colocados de cada partido:");
         pos = 1;
         for (Partido p : partidos) {
 
@@ -348,7 +348,7 @@ public class App {
         }
 
         //Imprime a distribuição de eleitos por faixa etária, considerando a idade do candidato no dia da eleição (9)
-        System.out.println("Eleitos, por faixa etária (na data da eleição):");
+        System.out.println("\nEleitos, por faixa etária (na data da eleição):");
         System.out.printf(Locale.FRANCE,"      Idade < 30: %d (%,.2f%%)\n",intervalos[0],100.0 * intervalos[0] / vagas);
         System.out.printf(Locale.FRANCE,"30 <= Idade < 40: %d (%,.2f%%)\n",intervalos[1],100.0 * intervalos[1] / vagas);
         System.out.printf(Locale.FRANCE,"40 <= Idade < 50: %d (%,.2f%%)\n",intervalos[2],100.0 * intervalos[2] / vagas);
@@ -357,8 +357,8 @@ public class App {
 
 
         //Imprime a distribuição de eleitos por sexo (10)
-        System.out.println("Eleitos, por sexo:");
-        System.out.printf(Locale.FRANCE,"Feminino: %d (%,.2f%%)\n",femininos, 100.0 * femininos / vagas);
+        System.out.println("\nEleitos, por sexo:");
+        System.out.printf(Locale.FRANCE,"Feminino:  %d (%,.2f%%)\n",femininos, 100.0 * femininos / vagas);
         System.out.printf(Locale.FRANCE,"Masculino: %d (%,.2f%%)\n",masculinos, 100.0 * masculinos / vagas);
 
 
@@ -374,8 +374,8 @@ public class App {
         }
 
         //Imprime o total de votos, os nominais e os de legenda (11)
-        System.out.printf("Total de votos válidos:    %d\n",votos_validos);
+        System.out.printf("\nTotal de votos válidos:    %d\n",votos_validos);
         System.out.printf(Locale.FRANCE,"Total de votos nominais:   %d (%,.2f%%)\n",votos_nominais, 100.0 * votos_nominais/votos_validos);
-        System.out.printf(Locale.FRANCE,"Total de votos de legenda: %d (%,.2f%%)\n",votos_legenda, 100.0 * votos_legenda/votos_validos);
+        System.out.printf(Locale.FRANCE,"Total de votos de legenda: %d (%,.2f%%)\n\n\n",votos_legenda, 100.0 * votos_legenda/votos_validos);
     }
 }
